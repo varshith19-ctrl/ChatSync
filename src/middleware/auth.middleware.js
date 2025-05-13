@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js"
 import cookieParser from "cookie-parser"
 export const protectRoute=async (req,res,next)=>{
 try {
-    const token=req.cookie.jwt;
+    const token=req.cookie.jwt; 
     if(!token){
         return res.status(401).json({
             message:"this is an Unauthorised request"

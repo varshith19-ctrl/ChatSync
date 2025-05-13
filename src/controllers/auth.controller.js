@@ -55,7 +55,7 @@ return res.status(400).json({message:"Invalid credentials"})
     fullName:user.fullName,
 email:user.email,
 profilePic:user.profilePic,
-   })
+   }) 
 } catch(error){
     console.log(`there was a login error ${error}`)
     return res.status(500).json({
