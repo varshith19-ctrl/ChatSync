@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "backend part of the chatting  application ",
   "main": "src/index.js",
-  "type": "module",
+  "type": "module", 
   "scripts": {
     "dev": "nodemon dotenv src/index.js"
   },
