@@ -3,16 +3,17 @@
   "version": "1.0.0",
   "description": "backend part of the chatting  application ",
   "main": "src/index.js",
-  "type": "module", 
-    "scripts": {
+  "type": "module",
+  "scripts": {
     "dev": "nodemon dotenv src/index.js"
   },
-  "author": "Varshith", 
+  "author": "Varshith",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
-    "cloudinary": "^2.6.1", 
+    "cloudinary": "^2.6.1",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "git": "^0.1.5",
@@ -21,6 +22,7 @@
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
+    "daisyui": "^5.0.35",
     "nodemon": "^3.1.10"
   }
 }
