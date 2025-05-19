@@ -1,9 +1,11 @@
-import mongoose from "mongoose" 
-const userSchema=new mongoose.Schema( {
+import mongoose from "mongoose";
+
+const userSchema = new mongoose.Schema(
+  {
     email: {
       type: String,
       required: true,
-      unique: true, 
+      unique: true,
     },
     fullName: {
       type: String,
@@ -19,5 +21,9 @@ const userSchema=new mongoose.Schema( {
       default: "",
     },
   },
-  { timestamps: true })
-export const User=mongoose.model("User",userSchema)
+  { timestamps: true }
+);
+
+const User = mongoose.model("User", userSchema);
+
+export default User;
