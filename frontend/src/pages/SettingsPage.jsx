@@ -28,22 +28,45 @@ const SettingsPage = () => {
           {THEMES.map((t) => (
             <button
               key={t}
-              className={`
-                group flex flex-col items-center gap-1.5 p-2 rounded-lg transition-colors
-                ${theme === t ? "bg-base-200" : "hover:bg-base-200/50"}
-              `}
+              className={`group flex flex-col items-center gap-1.5 p-2 rounded-lg transition-colors ${
+                theme === t ? "bg-base-200" : "hover:bg-base-200/50"
+              }`}
               onClick={() => setTheme(t)}
             >
-              <div
-                className="relative h-8 w-full rounded-md overflow-hidden"
-                data-theme={t}
-              >
-                <div className="absolute inset-0 grid grid-cols-4 gap-px p-1">
-                  <div className="rounded bg-primary"></div>
-                  <div className="rounded bg-secondary"></div>
-                  <div className="rounded bg-accent"></div>
-                  <div className="rounded bg-neutral"></div>
-                </div>
+              <div className="w-full h-8 rounded-md overflow-hidden border">
+                <iframe
+                  title={t}
+                  className="w-full h-full"
+                  srcDoc={`
+                    <html data-theme="${t}">
+                      <head>
+                        <link href="https://cdn.jsdelivr.net/npm/daisyui@3.8.0/dist/full.css" rel="stylesheet" />
+                        <style>
+                          html, body { margin: 0; padding: 0; height: 100%; }
+                          .preview-grid {
+                            display: grid;
+                            grid-template-columns: repeat(4, 1fr);
+                            gap: 2px;
+                            padding: 4px;
+                            height: 100%;
+                          }
+                          .preview-grid div {
+                            border-radius: 4px;
+                            height: 100%;
+                          }
+                        </style>
+                      </head>
+                      <body>
+                        <div class="preview-grid">
+                          <div class="bg-primary"></div>
+                          <div class="bg-secondary"></div>
+                          <div class="bg-accent"></div>
+                          <div class="bg-neutral"></div>
+                        </div>
+                      </body>
+                    </html>
+                  `}
+                />
               </div>
               <span className="text-[11px] font-medium truncate w-full text-center">
                 {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -82,25 +105,19 @@ const SettingsPage = () => {
                       }`}
                     >
                       <div
-                        className={`
-                          max-w-[80%] rounded-xl p-3 shadow-sm
-                          ${
-                            message.isSent
-                              ? "bg-primary text-primary-content"
-                              : "bg-base-200"
-                          }
-                        `}
+                        className={`max-w-[80%] rounded-xl p-3 shadow-sm ${
+                          message.isSent
+                            ? "bg-primary text-primary-content"
+                            : "bg-base-200"
+                        }`}
                       >
                         <p className="text-sm">{message.content}</p>
                         <p
-                          className={`
-                            text-[10px] mt-1.5
-                            ${
-                              message.isSent
-                                ? "text-primary-content/70"
-                                : "text-base-content/70"
-                            }
-                          `}
+                          className={`text-[10px] mt-1.5 ${
+                            message.isSent
+                              ? "text-primary-content/70"
+                              : "text-base-content/70"
+                          }`}
                         >
                           12:00 PM
                         </p>
@@ -132,4 +149,5 @@ const SettingsPage = () => {
     </div>
   );
 };
+
 export default SettingsPage;

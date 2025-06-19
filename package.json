@@ -1,28 +1,16 @@
 {
-  "name": "chatt-backend",
+  "name": "chatsync",
   "version": "1.0.0",
-  "description": "backend part of the chatting  application ",
-  "main": "src/index.js",
-  "type": "module",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon dotenv src/index.js"
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
   },
-  "author": "Varshith",
+  "engines": {
+    "node": "20.x"
+  },
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "dependencies": {
-    "bcryptjs": "^3.0.2",
-    "cloudinary": "^2.6.1",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "git": "^0.1.5",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.14.2",
-    "socket.io": "^4.8.1"
-  },
-  "devDependencies": {
-    "daisyui": "^5.0.35",
-    "nodemon": "^3.1.10"
-  }
+  "description": ""
 }
