@@ -15,8 +15,13 @@ const SettingsPage = () => {
   const { theme, setTheme } = useThemeStore();
 
   return (
-    <div className="h-screen container mx-auto px-4 pt-20 max-w-5xl">
+    <div
+      className="h-screen container mx-auto px-4 pt-20 max-w-5xl"
+      role="main"
+      aria-label="Settings page"
+    >
       <div className="space-y-6">
+        {/* Header */}
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-semibold">Theme</h2>
           <p className="text-sm text-base-content/70">
@@ -24,7 +29,12 @@ const SettingsPage = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+        {/* Theme Grid */}
+        <div
+          className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2"
+          role="radiogroup"
+          aria-label="Theme selection"
+        >
           {THEMES.map((t) => (
             <button
               key={t}
@@ -32,12 +42,18 @@ const SettingsPage = () => {
                 theme === t ? "bg-base-200" : "hover:bg-base-200/50"
               }`}
               onClick={() => setTheme(t)}
+              role="radio"
+              aria-checked={theme === t}
+              title={`Select ${t} theme`}
+              tabIndex={0}
             >
+              {/* Preview Swatch */}
               <div className="w-full h-8 rounded-md overflow-hidden border">
                 <iframe
                   title={t}
+                  loading="lazy"
                   className="w-full h-full"
-                  srcDoc={`
+                  srcDoc={`<!DOCTYPE html>
                     <html data-theme="${t}">
                       <head>
                         <link href="https://cdn.jsdelivr.net/npm/daisyui@3.8.0/dist/full.css" rel="stylesheet" />
@@ -64,8 +80,7 @@ const SettingsPage = () => {
                           <div class="bg-neutral"></div>
                         </div>
                       </body>
-                    </html>
-                  `}
+                    </html>`}
                 />
               </div>
               <span className="text-[11px] font-medium truncate w-full text-center">
@@ -75,17 +90,24 @@ const SettingsPage = () => {
           ))}
         </div>
 
-        {/* Preview Section */}
+        {/* Chat Preview Header */}
         <h3 className="text-lg font-semibold mb-3">Preview</h3>
-        <div className="rounded-xl border border-base-300 overflow-hidden bg-base-100 shadow-lg">
+
+        {/* Mock Chat Preview Card */}
+        <div
+          className="rounded-xl border border-base-300 overflow-hidden bg-base-100 shadow-lg"
+          aria-label="Chat preview"
+        >
           <div className="p-4 bg-base-200">
             <div className="max-w-lg mx-auto">
-              {/* Mock Chat UI */}
               <div className="bg-base-100 rounded-xl shadow-sm overflow-hidden">
                 {/* Chat Header */}
                 <div className="px-4 py-3 border-b border-base-300 bg-base-100">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content font-medium">
+                    <div
+                      className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content font-medium"
+                      aria-hidden="true"
+                    >
                       J
                     </div>
                     <div>
@@ -96,7 +118,10 @@ const SettingsPage = () => {
                 </div>
 
                 {/* Chat Messages */}
-                <div className="p-4 space-y-4 min-h-[200px] max-h-[200px] overflow-y-auto bg-base-100">
+                <div
+                  className="p-4 space-y-4 min-h-[200px] max-h-[200px] overflow-y-auto bg-base-100"
+                  aria-live="polite"
+                >
                   {PREVIEW_MESSAGES.map((message) => (
                     <div
                       key={message.id}
@@ -126,7 +151,7 @@ const SettingsPage = () => {
                   ))}
                 </div>
 
-                {/* Chat Input */}
+                {/* Chat Input Preview */}
                 <div className="p-4 border-t border-base-300 bg-base-100">
                   <div className="flex gap-2">
                     <input
@@ -135,8 +160,13 @@ const SettingsPage = () => {
                       placeholder="Type a message..."
                       value="This is a preview"
                       readOnly
+                      aria-readonly="true"
+                      aria-label="Message input preview"
                     />
-                    <button className="btn btn-primary h-10 min-h-0">
+                    <button
+                      className="btn btn-primary h-10 min-h-0"
+                      aria-label="Send message (preview only)"
+                    >
                       <Send size={18} />
                     </button>
                   </div>

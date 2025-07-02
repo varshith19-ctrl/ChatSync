@@ -56,7 +56,7 @@ const ChatContainer = () => {
   return (
     <div className="flex-1 flex flex-col overflow-auto">
       <ChatHeader />
-      {/* <p>messages</p> */}
+
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {summarizeMode && summaryMessage && (
           <div className="p-6 text-center text-zinc-500">
@@ -74,9 +74,10 @@ const ChatContainer = () => {
               }`}
               ref={messageEndRef}
             >
-              <div className=" chat-image avatar">
+              <div className="chat-image avatar">
                 <div className="size-10 rounded-full border">
                   <img
+                    loading="lazy" // ✅ Lazy load avatar
                     src={
                       message.senderId === authUser._id
                         ? authUser.profilePic || "/avatar.png"
@@ -94,6 +95,7 @@ const ChatContainer = () => {
               <div className="chat-bubble flex flex-col">
                 {message.image && (
                   <img
+                    loading="lazy" // ✅ Lazy load attachments
                     src={message.image}
                     alt="Attachment"
                     className="sm:max-w-[200px] rounded-md mb-2"
@@ -109,4 +111,5 @@ const ChatContainer = () => {
     </div>
   );
 };
+
 export default ChatContainer;

@@ -15,7 +15,8 @@ const ChatHeader = () => {
             <div className="size-10 rounded-full relative">
               <img
                 src={selectedUser.profilePic || "/avatar.png"}
-                alt={selectedUser.fullName}
+                alt={`Profile of ${selectedUser.fullName}`} //  ACCESSIBILITY
+                loading="lazy" // LAZY LOADING
               />
             </div>
           </div>
@@ -30,11 +31,16 @@ const ChatHeader = () => {
         </div>
 
         {/* Close button */}
-        <button onClick={() => setSelectedUser(null)}>
+        <button
+          onClick={() => setSelectedUser(null)}
+          aria-label="Close chat" //  ACCESSIBILITY
+          tabIndex={0} //  ACCESSIBILITY (optional if button is already focusable)
+        >
           <X />
         </button>
       </div>
     </div>
   );
 };
+
 export default ChatHeader;
