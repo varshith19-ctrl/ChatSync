@@ -59,7 +59,7 @@ const ChatContainer = () => {
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {
-          summarizeMode && !summaryMessage && <p>loading...</p>
+          summarizeMode && !summaryMessage && <p className="text-center text-[#88a1ba]">loading...</p>
         }
         {summarizeMode && summaryMessage && (
           <div className="p-6 text-center text-zinc-500">
