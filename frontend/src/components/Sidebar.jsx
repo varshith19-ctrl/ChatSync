@@ -83,7 +83,7 @@ const Sidebar = () => {
         {/* User list */}
         {filteredUsers.map((user) => (
           <button
-            key={user._id}
+            key={user._id} 
             onClick={async () => {
               setSelectedUser(user); // Set the selected chat
 
