@@ -3,10 +3,19 @@ import { useChatStore } from "../store/useChatStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
+import { axiosInstance } from "../lib/axios";
 
 const Sidebar = () => {
-  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
-    useChatStore();
+  const {
+    getUsers,
+    users,
+    selectedUser,
+    setSelectedUser,
+    isUsersLoading,
+    summarizeMode,
+    setSummarizeMode,
+    setSummaryMessage,
+  } = useChatStore();
 
   const { onlineUsers } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
@@ -42,13 +51,59 @@ const Sidebar = () => {
             ({onlineUsers.length - 1} online)
           </span>
         </div>
+        <div className="mt-2 hidden lg:flex items-center gap-2">
+          <label className="cursor-pointer flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={summarizeMode}
+              onChange={(e) => setSummarizeMode(e.target.checked)}
+              className="checkbox checkbox-sm"
+            />
+            <span className="text-sm">Google AI Summarize mode</span>
+          </label>
+        </div>
       </div>
 
       <div className="overflow-y-auto w-full py-3">
         {filteredUsers.map((user) => (
           <button
             key={user._id}
-            onClick={() => setSelectedUser(user)}
+            onClick={async () => {
+              setSelectedUser(user);
+
+              if (!summarizeMode) {
+                setSummaryMessage(null);
+                return;
+              }
+
+              try {
+                const res = await axiosInstance.get(`/messages/${user._id}`);
+                const data = res.data;
+
+                const formatted = data.map((msg) =>
+                  msg.sender === user._id
+                    ? `User: ${msg.text}`
+                    : `Me: ${msg.text}`
+                );
+
+                const summaryRes = await axiosInstance.post(
+                  "/messages/summarize",
+                  {
+                    messages: formatted,
+                  }
+                );
+
+                const summary = summaryRes?.data?.summary;
+                setSummaryMessage(summary || "⚠️ No summary returned.");
+              } catch (err) {
+                console.error(err);
+                setSummaryMessage(
+                  `⚠️ Failed to load summary: ${
+                    err.response?.data?.error || err.message
+                  }`
+                );
+              }
+            }}
             className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${
               selectedUser?._id === user._id
                 ? "bg-base-300 ring-1 ring-base-300"

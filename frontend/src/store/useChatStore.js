@@ -9,6 +9,11 @@ export const useChatStore = create((set, get) => ({
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
+  summarizeMode: false, // Summarize Mode toggle
+  summaryMessage: null, //  Stores summary text
+
+  setSummarizeMode: (val) => set({ summarizeMode: val }),
+  setSummaryMessage: (msg) => set({ summaryMessage: msg }),
 
   getUsers: async () => {
     set({ isUsersLoading: true });
