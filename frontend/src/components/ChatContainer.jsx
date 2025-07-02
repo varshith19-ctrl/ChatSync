@@ -58,6 +58,9 @@ const ChatContainer = () => {
       <ChatHeader />
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {
+          summarizeMode && !summaryMessage && <p>loading...</p>
+        }
         {summarizeMode && summaryMessage && (
           <div className="p-6 text-center text-zinc-500">
             <p className="text-lg font-medium mb-2">Summary of Conversation</p>
