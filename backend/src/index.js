@@ -17,7 +17,7 @@ app.use(express.json({ limit: "500mb" }));
 app.use(express.urlencoded({ limit: "500mb", extended: true }));
 app.use(
   cors({
-    origin: "chat-sync-five.vercel.app", // Dynamically allow any origin that makes the request
+    origin: "https://chat-sync-five.vercel.app", // Dynamically allow any origin that makes the request
     credentials: true,
   })
 );
