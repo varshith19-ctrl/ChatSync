@@ -80,93 +80,86 @@ const Sidebar = () => {
       </div>
 
       <div className="overflow-y-auto w-full py-3">
-        {/* Defensive check */}
-        {!Array.isArray(filteredUsers) ? (
-          <div className="text-center text-red-500 py-4">
-            ❌ Error loading users. Please try again later.
-          </div>
-        ) : (
-          <>
-            {/* User list */}
-            {filteredUsers.map((user) => (
-              <button
-                key={user._id}
-                onClick={async () => {
-                  setSelectedUser(user);
-                  if (!summarizeMode) {
-                    setSummaryMessage(null);
-                    return;
-                  }
-                  try {
-                    const res = await axiosInstance.get(
-                      `/messages/${user._id}`
-                    );
-                    const data = res.data;
+        {/* User list */}
 
-                    const formatted = data.map((msg) =>
-                      msg.sender === user._id
-                        ? `User: ${msg.text}`
-                        : `Me: ${msg.text}`
-                    );
+        {filteredUsers.map((user) => (
+          <button
+            key={user._id}
+            onClick={async () => {
+              setSelectedUser(user); // Set the selected chat
 
-                    const summaryRes = await axiosInstance.post(
-                      "/messages/summarize",
-                      { messages: formatted }
-                    );
+              if (!summarizeMode) {
+                setSummaryMessage(null);
+                return;
+              }
 
-                    const summary = summaryRes?.data?.summary;
-                    setSummaryMessage(summary || "⚠️ No summary returned.");
-                  } catch (err) {
-                    console.error(err);
-                    setSummaryMessage(
-                      `⚠️ Failed to load summary: ${
-                        err.response?.data?.error || err.message
-                      }`
-                    );
-                  }
-                }}
-                className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${
-                  selectedUser?._id === user._id
-                    ? "bg-base-300 ring-1 ring-base-300"
-                    : ""
-                }`}
-                aria-pressed={selectedUser?._id === user._id}
-                aria-label={`Select chat with ${user.fullName}`}
-              >
-                {/* User avatar */}
-                <div className="relative mx-auto lg:mx-0">
-                  <img
-                    src={user.profilePic || "/avatar.png"}
-                    alt={`Profile of ${user.fullName}`}
-                    className="size-12 object-cover rounded-full"
-                    loading="lazy"
-                  />
-                  {onlineUsers.includes(user._id) && (
-                    <span
-                      className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900"
-                      aria-label="Online"
-                      role="status"
-                    />
-                  )}
-                </div>
+              try {
+                // Fetch conversation history
+                const res = await axiosInstance.get(`/messages/${user._id}`);
+                const data = res.data;
 
-                {/* User details */}
-                <div className="hidden lg:block text-left min-w-0">
-                  <div className="font-medium truncate">{user.fullName}</div>
-                  <div className="text-sm text-zinc-400">
-                    {onlineUsers.includes(user._id) ? "Online" : "Offline"}
-                  </div>
-                </div>
-              </button>
-            ))}
+                // Format messages for summarization
+                const formatted = data.map((msg) =>
+                  msg.sender === user._id
+                    ? `User: ${msg.text}`
+                    : `Me: ${msg.text}`
+                );
 
-            {/* Empty state */}
-            {filteredUsers.length === 0 && (
-              <div className="text-center text-zinc-500 py-4">
-                No online users
+                // Call backend to summarize conversation
+                const summaryRes = await axiosInstance.post(
+                  "/messages/summarize",
+                  { messages: formatted }
+                );
+
+                const summary = summaryRes?.data?.summary;
+                setSummaryMessage(summary || "⚠️ No summary returned.");
+              } catch (err) {
+                console.error(err);
+                setSummaryMessage(
+                  `⚠️ Failed to load summary: ${
+                    err.response?.data?.error || err.message
+                  }`
+                );
+              }
+            }}
+            className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${
+              selectedUser?._id === user._id
+                ? "bg-base-300 ring-1 ring-base-300"
+                : ""
+            }`}
+            aria-pressed={selectedUser?._id === user._id}
+            aria-label={`Select chat with ${user.fullName}`}
+          >
+            {/* User avatar */}
+            <div className="relative mx-auto lg:mx-0">
+              <img
+                src={user.profilePic || "/avatar.png"}
+                alt={`Profile of ${user.fullName}`}
+                className="size-12 object-cover rounded-full"
+                loading="lazy" // Lazy loading improves performance
+              />
+              {onlineUsers.includes(user._id) && (
+                <span
+                  className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900"
+                  aria-label="Online"
+                  role="status"
+                />
+              )}
+            </div>
+
+            {/* User details */}
+            <div className="hidden lg:block text-left min-w-0">
+              <div className="font-medium truncate">{user.fullName}</div>
+              <div className="text-sm text-zinc-400">
+                {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>
-            )}
-          </>
+            </div>
+          </button>
+        ))}
+
+        {/* Empty state */}
+        {filteredUsers.length === 0 && (
+          <div className="text-center text-zinc-500 py-4">No online users</div>
         )}
       </div>
     </aside>
