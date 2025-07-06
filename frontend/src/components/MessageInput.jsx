@@ -8,6 +8,8 @@ const MessageInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [isScheduled, setIsScheduled] = useState(false);
+  const [scheduledTime, setScheduledTime] = useState("");
 
   const fileInputRef = useRef(null);
   const { sendMessage } = useChatStore();
@@ -39,6 +41,9 @@ const MessageInput = () => {
       await sendMessage({
         text: text.trim(),
         image: imagePreview,
+        scheduledTime: isScheduled
+          ? new Date(scheduledTime).toISOString()
+          : null,
       });
 
       setText("");
@@ -75,6 +80,28 @@ const MessageInput = () => {
           </div>
         </div>
       )}
+
+      {/* Scheduled toggle and datetime picker */}
+      <div className="flex items-center gap-4 mb-2">
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={isScheduled}
+            onChange={() => setIsScheduled(!isScheduled)}
+          />
+          Schedule
+        </label>
+
+        {isScheduled && (
+          <input
+            type="datetime-local"
+            className="input input-sm"
+            value={scheduledTime}
+            onChange={(e) => setScheduledTime(e.target.value)}
+            min={new Date().toISOString().slice(0, 16)} // disallow past time
+          />
+        )}
+      </div>
 
       <form onSubmit={handleSendMessage} className="flex items-center gap-2">
         <div className="flex-1 flex gap-2">
