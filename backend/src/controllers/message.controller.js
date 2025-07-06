@@ -9,7 +9,7 @@ const cohere = new CohereClient({
 
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
-
+import { ScheduledMessage } from "../models/scheduledMessage.model.js";
 import { getReceiverSocketId, io } from "../lib/socket.js";
 export const getUsersForSidebar = async (req, res) => {
   try {
@@ -48,15 +48,34 @@ export const getMessages = async (req, res) => {
 };
 export const sendMessage = async (req, res) => {
   try {
-    const { text, image } = req.body;
+    const { text, image, scheduledTime } = req.body;
     const { id: receiverId } = req.params;
     const myId = req.user._id;
     let imageUrl;
+
+    // If image is included, upload to cloudinary
     if (image) {
-      //base 64 image
-      const updloadResponse = await cloudinary.uploader.upload(image);
-      imageUrl = updloadResponse.secure_url;
+      const uploadResponse = await cloudinary.uploader.upload(image);
+      imageUrl = uploadResponse.secure_url;
     }
+
+    // 🕒 If scheduledTime is provided, save to ScheduledMessage instead of sending now
+    if (scheduledTime) {
+      const newScheduledMessage = new ScheduledMessage({
+        senderId: myId,
+        receiverId,
+        text,
+        image: imageUrl,
+        scheduledTime,
+      });
+
+      await newScheduledMessage.save();
+      return res
+        .status(201)
+        .json({ message: "✅ Message scheduled successfully" });
+    }
+
+    // 🚀 Immediate message send
     const newMessage = new Message({
       senderId: myId,
       receiverId,
@@ -69,13 +88,13 @@ export const sendMessage = async (req, res) => {
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
+
     res.status(201).json(newMessage);
   } catch (error) {
-    console.log("Error in sendMessage controller", error.message);
-    res.status(404).json({ message: "Internal Server error" });
+    console.error("❌ Error in sendMessage controller:", error.message);
+    res.status(500).json({ message: "Internal Server error" });
   }
 };
-
 export const summarizeMessages = async (req, res) => {
   const { messages } = req.body;
 
@@ -103,7 +122,7 @@ export const summarizeMessages = async (req, res) => {
       extractiveness: "low", // low, medium, high
     });
 
-res.json({ summary: response.summary });
+    res.json({ summary: response.summary });
   } catch (error) {
     console.error("Cohere summarization error:", error);
     res.status(500).json({

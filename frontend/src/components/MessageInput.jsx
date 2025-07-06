@@ -1,6 +1,9 @@
 import { useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { Image, Send, X } from "lucide-react";
+import { axiosInstance } from "../lib/axios";
+// ✅ Add this if not already present
+
 import toast from "react-hot-toast";
 import EmojiPicker from "emoji-picker-react";
 
@@ -12,7 +15,7 @@ const MessageInput = () => {
   const [scheduledTime, setScheduledTime] = useState("");
 
   const fileInputRef = useRef(null);
-  const { sendMessage } = useChatStore();
+  const { sendMessage, selectedUser } = useChatStore();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -37,20 +40,35 @@ const MessageInput = () => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
 
+    const payload = {
+      text: text.trim(),
+      image: imagePreview,
+      scheduledTime: isScheduled ? new Date(scheduledTime).toISOString() : null,
+    };
+    console.log("Payload:", payload);
     try {
-      await sendMessage({
-        text: text.trim(),
-        image: imagePreview,
-        scheduledTime: isScheduled
-          ? new Date(scheduledTime).toISOString()
-          : null,
-      });
+      if (isScheduled && scheduledTime) {
+        // For scheduled message
+        await axiosInstance.post(
+          `/messages/schedule/${selectedUser._id}`,
+          payload
+        );
+        toast.success("📅 Message scheduled!");
+      } else {
+        // For instant message
+        await sendMessage(payload);
+        toast.success("📨 Message sent!");
+      }
 
+      // Reset form
       setText("");
       setImagePreview(null);
+      setScheduledTime("");
+      setIsScheduled(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
-      console.error("Failed to send message:", error);
+      console.error("Message send failed:", error);
+      toast.error(error.response?.data?.message || "Failed to send message");
     }
   };
 

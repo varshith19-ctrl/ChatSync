@@ -42,14 +42,31 @@ export const useChatStore = create((set, get) => ({
 
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
+
+    const isScheduled = !!messageData.scheduledTime;
+
     try {
+      if (isScheduled) {
+        await axiosInstance.post(
+          `/messages/schedule/${selectedUser._id}`,
+          messageData
+        );
+        toast.success("Message scheduled successfully");
+        return;
+      }
+
       const res = await axiosInstance.post(
         `/messages/send/${selectedUser._id}`,
         messageData
       );
       set({ messages: [...messages, res.data] });
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to send message");
+      toast.error(
+        error.response?.data?.message ||
+          (isScheduled
+            ? "Failed to schedule message"
+            : "Failed to send message")
+      );
     }
   },
 
