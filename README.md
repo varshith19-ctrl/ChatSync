@@ -11,7 +11,7 @@ ChatSync is a real-time one-on-one chat application built using **Socket.IO** an
 - 💡 Toggle Interface: Sidebar includes a simple switch to enable/disable AI summarization.
 - 💬 Persistent History: Messages are stored and retrieved from a database.
 - 🌐 Clean UI: Built using **React**, **Tailwind CSS**, and **DaisyUI** for a modern and responsive look.
-- 📅 Scheduling Feature: Schedule messages or meetings directly within the chat. Includes time-picker, reminder notifications, and calendar integration support.
+- 📅 Scheduling Feature: Schedule messages directly within the chat. Includes time-picker and calendar integration support.
 ---
 
 
