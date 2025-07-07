@@ -26,7 +26,8 @@ ChatSync is a real-time one-on-one chat application built using **Socket.IO** an
 | Deployment    | Vercel (frontend), Render/(backend) |
 
 ---
-
+Note : Wait for atleast 30 seconds for the link to load the page . 
+live link : http://chat-sync-five.vercel.app
 ## 📦 Installation
 
 ### 1. Clone the Repository
