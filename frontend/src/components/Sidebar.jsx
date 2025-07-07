@@ -4,8 +4,14 @@ import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { axiosInstance } from "../lib/axios";
+import SearchUsers from "../components/SearchUsers";
+
+
 
 const Sidebar = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  console.log("Sidebar searchQuery:", searchQuery);
   // Access necessary states and actions from global stores
   const {
     getUsers,
@@ -27,9 +33,15 @@ const Sidebar = () => {
   }, [getUsers]);
 
   // Filter users if "show online only" toggle is on
-  const filteredUsers = showOnlineOnly
+  let  filteredUsers = showOnlineOnly
     ? users.filter((user) => onlineUsers.includes(user._id))
     : users;
+    
+   if (searchQuery) {
+  filteredUsers = filteredUsers.filter((user) =>
+    user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+   }
 
   // Show loading skeleton while fetching users
   if (isUsersLoading) return <SidebarSkeleton />;
@@ -46,7 +58,12 @@ const Sidebar = () => {
           <Users className="size-6" aria-hidden="true" />
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
+          
+            <div className="mt-4">
+             <SearchUsers searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
+
+            </div>
         {/* Toggle: Show online only */}
         <div className="mt-3 hidden lg:flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
@@ -158,9 +175,20 @@ const Sidebar = () => {
         ))}
 
         {/* Empty state */}
-        {filteredUsers.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">No online users</div>
-        )}
+       {filteredUsers.length === 0 && (
+  <div className="text-center text-zinc-500 py-4">
+    {searchQuery
+      ? `No users found for "${searchQuery}"`
+      : showOnlineOnly
+        ? "No online users"
+        : "No users available"}
+        <div className="text-center text-gray-400 py-4 italic">
+  😔 No users found for <span className="font-semibold">"{searchQuery}"</span>
+</div>
+
+  </div>
+)}
+
       </div>
     </aside>
   );
