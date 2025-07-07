@@ -17,9 +17,13 @@ const PORT = process.env.PORT;
 const __dirname = path.resolve();
 app.use(express.json({ limit: "500mb" }));
 app.use(express.urlencoded({ limit: "500mb", extended: true }));
+const allowedOrigins =
+  process.env.NODE_ENV === "development"
+    ? ["http://localhost:5173"]
+    : ["https://chat-sync-five.vercel.app"];
 app.use(
   cors({
-    origin: "https://chat-sync-five.vercel.app", // Dynamically allow any origin that makes the request
+    origin: allowedOrigins, // Dynamically allow any origin that makes the request
     credentials: true,
   })
 );
