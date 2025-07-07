@@ -34,4 +34,6 @@ A real-time one-on-one chat application enhanced with an **AI Summarizing Mode**
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/varshith19-ctrl/ChatSync.git
-   cd chatt-appn
+   cd ChatSync
+   code .
+
