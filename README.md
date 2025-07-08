@@ -29,7 +29,7 @@ ChatSync is a real-time one-on-one chat application built using **Socket.IO** an
 ---
 Note : Wait for atleast 30 seconds for the link to load the page . 
 live link : http://chat-sync-five.vercel.app
-## 📦 Installation
+
 
 ## 🔮 Future Scope
 
@@ -56,7 +56,8 @@ live link : http://chat-sync-five.vercel.app
 
 - 🌐 **Multi-Language Support with Translation**  
   Support real-time language translation for messages, allowing seamless communication between users speaking different languages.
-
+  
+## 📦 Installation
 ### 1. Clone the Repository
 
 ```VSCode
