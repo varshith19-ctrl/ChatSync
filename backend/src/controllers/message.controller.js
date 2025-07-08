@@ -116,7 +116,7 @@ export const summarizeMessages = async (req, res) => {
     const response = await cohere.summarize({
       text: cleanedMessages.join("\n"),
       model: "command",
-      length: "short", // short, medium, long
+      length: "long", // short, medium, long
       format: "paragraph", // paragraph | bullet
       temperature: 1, // less randomness
       extractiveness: "low", // low, medium, high
