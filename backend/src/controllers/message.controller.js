@@ -117,8 +117,8 @@ export const summarizeMessages = async (req, res) => {
       text: cleanedMessages.join("\n"),
       model: "command",
       length: "long", // short, medium, long
-      format: "paragraph", // paragraph | bullet
-      temperature: 1, // less randomness
+      format: "bullets", // paragraph | bullets
+      temperature: 0.3, // less randomness
       extractiveness: "low", // low, medium, high
     });
 
