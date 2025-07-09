@@ -14,15 +14,33 @@ import { getReceiverSocketId, io } from "../lib/socket.js";
 export const getUsersForSidebar = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
+
     const filteredUsers = await User.find({
       _id: { $ne: loggedInUserId },
     }).select("-password");
-    res.status(200).json(filteredUsers);
+
+    const usersWithUnread = await Promise.all(
+      filteredUsers.map(async (user) => {
+        const unreadCount = await Message.countDocuments({
+          senderId: user._id,
+          receiverId: loggedInUserId,
+          read: false,  // ensure your Message schema has a `read` field
+        });
+
+        return {
+          ...user.toObject(),
+          hasUnread: unreadCount > 0,
+        };
+      })
+    );
+
+    res.status(200).json(usersWithUnread);
   } catch (error) {
-    console.error("Errorin getUsersForSidebar: ", error.message);
+    console.error("Error in getUsersForSidebar: ", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 export const getMessages = async (req, res) => {
   try {
     const { id: userToChatId } = req.params;
@@ -95,6 +113,27 @@ export const sendMessage = async (req, res) => {
     res.status(500).json({ message: "Internal Server error" });
   }
 };
+export const markMessagesAsRead = async (req, res) => {
+  const { id: senderId } = req.params;
+  const receiverId = req.user._id;
+
+  try {
+    await Message.updateMany(
+      {
+        senderId,
+        receiverId,
+        read: false,
+      },
+      { $set: { read: true } }
+    );
+
+    res.status(200).json({ message: "✅ Messages marked as read." });
+  } catch (error) {
+    console.error("❌ Error marking messages as read:", error);
+    res.status(500).json({ error: "Failed to mark messages as read." });
+  }
+};
+
 export const summarizeMessages = async (req, res) => {
   const { messages } = req.body;
 
