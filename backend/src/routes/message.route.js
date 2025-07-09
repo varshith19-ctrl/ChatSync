@@ -1,6 +1,8 @@
 import express from "express";
 import { ScheduledMessage } from "../models/scheduledMessage.model.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
+import { markMessagesAsRead } from "../controllers/message.controller.js";
+
 import {
   getMessages,
   getUsersForSidebar,
@@ -16,5 +18,7 @@ router.get("/:id", protectRoute, getMessages);
 
 router.post("/send/:id", protectRoute, sendMessage);
 router.post("/summarize", protectRoute, summarizeMessages);
+router.post("/markAsRead/:id", protectRoute, markMessagesAsRead);
+
 
 export default router;
