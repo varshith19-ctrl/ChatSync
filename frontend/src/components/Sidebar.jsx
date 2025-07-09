@@ -26,6 +26,8 @@ const Sidebar = () => {
 
   const { onlineUsers } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false); // Filter toggle state
+  const [showUnreadOnly, setShowUnreadOnly] = useState(false);//for unread messages
+
 
   // Fetch users when the component mounts
   useEffect(() => {
@@ -33,9 +35,16 @@ const Sidebar = () => {
   }, [getUsers]);
 
   // Filter users if "show online only" toggle is on
-  let  filteredUsers = showOnlineOnly
-    ? users.filter((user) => onlineUsers.includes(user._id))
-    : users;
+let filteredUsers = [...users];
+
+if (showOnlineOnly) {
+  filteredUsers = filteredUsers.filter((user) => onlineUsers.includes(user._id));
+}
+
+if (showUnreadOnly) {
+  filteredUsers = filteredUsers.filter((user) => user.hasUnread);
+}
+
     
    if (searchQuery) {
   filteredUsers = filteredUsers.filter((user) =>
@@ -80,6 +89,19 @@ const Sidebar = () => {
             ({onlineUsers.length - 1} online)
           </span>
         </div>
+        {/* Toggle: Show unread only */}
+         <div className="mt-2 hidden lg:flex items-center gap-2">
+            <label className="cursor-pointer flex items-center gap-2">
+              <input
+                 type="checkbox"
+                 checked={showUnreadOnly}
+                 onChange={(e) => setShowUnreadOnly(e.target.checked)}
+                 className="checkbox checkbox-sm"
+             />
+             <span className="text-sm">Show unread only</span>
+            </label>
+         </div>
+
 
         {/* Toggle: Summarize mode */}
         <div className="mt-2 hidden lg:flex items-center gap-2">
