@@ -9,8 +9,11 @@ export const useChatStore = create((set, get) => ({
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
-  summarizeMode: false, // Summarize Mode toggle
-  summaryMessage: null, //  Stores summary text
+  summarizeMode: false,
+  summaryMessage: null,
+
+  // NEW: holds unread messages for each user
+  unreadMessages: {},
 
   setSummarizeMode: (val) => set({ summarizeMode: val }),
   setSummaryMessage: (msg) => set({ summaryMessage: msg }),
@@ -19,8 +22,7 @@ export const useChatStore = create((set, get) => ({
     set({ isUsersLoading: true });
     try {
       const res = await axiosInstance.get("/messages/user");
-      set({ users: res.data});
-
+      set({ users: res.data });
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to fetch users");
       set({ users: [] });
@@ -71,6 +73,7 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  // UPDATED: adds unread message tracking
   subscribeToMessages: () => {
     const { selectedUser } = get();
     if (!selectedUser) return;
@@ -82,8 +85,21 @@ export const useChatStore = create((set, get) => ({
       const isMessageFromSelectedUser =
         newMessage.senderId === selectedUser._id;
 
-      if (!isMessageFromSelectedUser) return;
+      if (!isMessageFromSelectedUser) {
+        // Save as unread
+        set((state) => ({
+          unreadMessages: {
+            ...state.unreadMessages,
+            [newMessage.senderId]: [
+              ...(state.unreadMessages[newMessage.senderId] || []),
+              newMessage,
+            ],
+          },
+        }));
+        return;
+      }
 
+      // If the message is from the selected user, show it directly
       set((state) => ({
         messages: [...state.messages, newMessage],
       }));
@@ -97,5 +113,23 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  setSelectedUser: (selectedUser) => set({ selectedUser }),
+  // UPDATED: clears unread when selecting a user
+  setSelectedUser: (selectedUser) => {
+    set((state) => {
+      const unreadCopy = { ...state.unreadMessages };
+      if (selectedUser && unreadCopy[selectedUser._id]) {
+        delete unreadCopy[selectedUser._id];
+      }
+      return {
+        selectedUser,
+        unreadMessages: unreadCopy,
+      };
+    });
+    // NEW: also tell server to mark as read
+  if (selectedUser) {
+    axiosInstance
+      .post(`/messages/markAsRead/${selectedUser._id}`)
+      .catch((err) => console.error("Failed to mark messages as read", err));
+  }
+  },
 }));
