@@ -2,6 +2,12 @@
 
 ChatSync is a real-time one-on-one chat application built using **Socket.IO** and React, enhanced with an intelligent **AI Summarizing Mode**. The app allows private messaging between users and offers the option to view AI-generated summaries of conversations using advanced language models like Cohere. This feature makes it ideal for productivity and communication clarity.
 
+Hey if you do not want to signup
+
+Use these credentials
+username:- PAV@gmail.com
+Password:- 123456
+
 ---
 
 ## 🚀 Features
@@ -29,8 +35,35 @@ ChatSync is a real-time one-on-one chat application built using **Socket.IO** an
 ---
 Note : Wait for atleast 30 seconds for the link to load the page . 
 live link : http://chat-sync-five.vercel.app
-## 📦 Installation
 
+
+## 🔮 Future Scope
+
+- 👥 **Group Chat Functionality**  
+  Extend the existing one-on-one chat to support real-time group messaging. Users will be able to create or join group chats with multiple participants. This will involve backend enhancements for socket group management and UI updates to display multi-user conversations.
+
+- 📌 **Pinned Messages & Announcements**  
+  Allow users to pin important messages in personal and group chats. This will help highlight key info like deadlines, updates, or shared resources.
+
+- 📎 **File Sharing & Media Previews**  
+  Enable users to send images, PDFs, and other media files in chat with preview support. This will enhance collaboration, especially in group discussions.
+
+- 🔔 **Smart Notifications**  
+  Implement intelligent and customizable notifications. Features like Do Not Disturb (DND) mode, silent groups, and priority messages will improve user experience in larger chats.
+
+- 🔍 **Advanced Search & Filters**  
+  Add a powerful message search functionality allowing users to filter chats by keywords, dates, or senders—especially useful for keeping track of conversations in active groups.
+
+- 🧠 **AI-Powered Group Chat Summarization**  
+  Extend the AI Summarize Mode to work with group chats. This feature will provide quick summaries of long discussions so users can catch up easily.
+
+- 🔒 **Role-Based Group Management**  
+  Introduce admin/moderator roles in group chats with the ability to manage members, moderate messages, and set permissions.
+
+- 🌐 **Multi-Language Support with Translation**  
+  Support real-time language translation for messages, allowing seamless communication between users speaking different languages.
+  
+## 📦 Installation
 ### 1. Clone the Repository
 
 ```VSCode
