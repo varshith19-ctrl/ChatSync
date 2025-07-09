@@ -2,6 +2,12 @@
 
 ChatSync is a real-time one-on-one chat application built using **Socket.IO** and React, enhanced with an intelligent **AI Summarizing Mode**. The app allows private messaging between users and offers the option to view AI-generated summaries of conversations using advanced language models like Cohere. This feature makes it ideal for productivity and communication clarity.
 
+Hey if you do not want to signup
+
+Use these credentials
+username:- PAV@gmail.com
+Password:- 123456
+
 ---
 
 ## 🚀 Features
