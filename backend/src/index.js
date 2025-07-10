@@ -17,17 +17,16 @@ const PORT = process.env.PORT;
 const __dirname = path.resolve();
 app.use(express.json({ limit: "500mb" }));
 app.use(express.urlencoded({ limit: "500mb", extended: true }));
-const allowedOrigins =
- 
-   [ "http://localhost:5173",
-    "https://chat-sync-five.vercel.app",
-  ];
+
+
+// allow your frontend domain
 app.use(
   cors({
-    origin: allowedOrigins, // Dynamically allow any origin that makes the request
-    credentials: true,
+    origin: "https://chat-sync-five.vercel.app",
+    credentials: true,  // if you use cookies
   })
 );
+
 
 app.use(cookieParser());
 console.log(" Checking authRoutes type:", typeof authRoutes);
